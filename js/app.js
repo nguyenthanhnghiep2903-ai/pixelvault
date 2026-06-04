@@ -686,8 +686,24 @@ function toggleLike(photoId) {
 
   localStorage.setItem('pv_likes', JSON.stringify([...state.likedPhotos]));
 
-  // Update grid buttons
-  $$(`[data-like-btn][data-photo-id="${photoId}"]`).forEach(btn => {
+  // Đồng bộ lên Firestore nếu đã đăng nhập
+  window.authModule?.saveLike(photoId, !isLiked);
+
+  // Cập nhật UI
+  refreshLikeButtons(photoId);
+}
+
+// =============================================
+// Refresh Like Buttons (dùng bởi auth.js)
+// =============================================
+
+function refreshLikeButtons(specificPhotoId = null) {
+  const selector = specificPhotoId
+    ? `[data-like-btn][data-photo-id="${specificPhotoId}"]`
+    : '[data-like-btn]';
+
+  $$(selector).forEach(btn => {
+    const photoId = parseInt(btn.dataset.photoId);
     const liked = state.likedPhotos.has(photoId);
     btn.classList.toggle('liked', liked);
     btn.innerHTML = liked ? '❤️' : '🤍';
@@ -695,9 +711,6 @@ function toggleLike(photoId) {
   });
 }
 
-// =============================================
-// Grid Event Delegation
-// =============================================
 
 function initGridEvents() {
   const grid = $('#photo-grid');
@@ -901,6 +914,11 @@ function init() {
 
   // After grid renders, animate observers
   setTimeout(initScrollAnimations, 600);
+
+  // Expose globals for auth.js
+  window.state      = state;
+  window.showToast  = showToast;
+  window.refreshLikeButtons = refreshLikeButtons;
 
   console.log('🎨 PixelVault initialized successfully!');
 }
