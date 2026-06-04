@@ -83,7 +83,8 @@ const state = {
   isLoading: false,
   hasMore: true,
   totalLoaded: 0,
-  likedPhotos: new Set(JSON.parse(localStorage.getItem('pv_likes') || '[]')),
+  likedPhotos: new Set(JSON.parse(localStorage.getItem('pv_likes')      || '[]')),
+  bookmarks:   new Set(JSON.parse(localStorage.getItem('pv_bookmarks') || '[]')),
   theme: localStorage.getItem('pv_theme') || 'dark',
   modalIndex: -1,
 };
@@ -732,11 +733,11 @@ function initGridEvents() {
       return;
     }
 
-    // Collect button
+    // Collect / Bookmark button
     const collectBtn = e.target.closest('[data-collect-btn]');
     if (collectBtn) {
       e.stopPropagation();
-      showToast('Đã lưu vào bộ sưu tập 🔖', 'success');
+      toggleBookmark(parseInt(collectBtn.dataset.photoId));
       return;
     }
 
@@ -758,6 +759,33 @@ function initGridEvents() {
         openModal(photoIndex);
       }
     }
+  });
+}
+
+// =============================================
+// Bookmark System
+// =============================================
+
+function toggleBookmark(photoId) {
+  const isBookmarked = state.bookmarks.has(photoId);
+
+  if (isBookmarked) {
+    state.bookmarks.delete(photoId);
+    showToast('Đã xóa khỏi bộ sưu tập', 'info');
+  } else {
+    state.bookmarks.add(photoId);
+    showToast('Đã lưu vào bộ sưu tập 🔖', 'success');
+  }
+
+  localStorage.setItem('pv_bookmarks', JSON.stringify([...state.bookmarks]));
+
+  // Đồng bộ Firestore nếu đã đăng nhập
+  window.authModule?.saveBookmark?.(photoId, !isBookmarked);
+
+  // Cập nhật icon bookmark trên grid
+  $$(`[data-collect-btn][data-photo-id="${photoId}"]`).forEach(btn => {
+    btn.style.background = state.bookmarks.has(photoId) ? 'var(--accent)' : '';
+    btn.style.borderColor = state.bookmarks.has(photoId) ? 'var(--accent)' : '';
   });
 }
 
@@ -915,9 +943,12 @@ function init() {
   // After grid renders, animate observers
   setTimeout(initScrollAnimations, 600);
 
-  // Expose globals for auth.js
-  window.state      = state;
-  window.showToast  = showToast;
+  // Expose globals
+  window.state            = state;
+  window.showToast        = showToast;
+  window.openModal        = openModal;
+  window.toggleLike       = toggleLike;
+  window.toggleBookmark   = toggleBookmark;
   window.refreshLikeButtons = refreshLikeButtons;
 
   console.log('🎨 PixelVault initialized successfully!');

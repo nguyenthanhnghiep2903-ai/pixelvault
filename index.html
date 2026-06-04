@@ -95,13 +95,13 @@
               <div class="user-dropdown-name" id="dropdown-user-name"></div>
               <div class="user-dropdown-email" id="dropdown-user-email"></div>
             </div>
-            <a href="#" class="user-dropdown-item" role="menuitem">
+            <a href="#" class="user-dropdown-item" role="menuitem" data-panel="profile">
               <span>👤</span> Hồ sơ của tôi
             </a>
-            <a href="#" class="user-dropdown-item" role="menuitem">
+            <a href="#" class="user-dropdown-item" role="menuitem" data-panel="likes">
               <span>❤️</span> Ảnh đã thích
             </a>
-            <a href="#" class="user-dropdown-item" role="menuitem">
+            <a href="#" class="user-dropdown-item" role="menuitem" data-panel="collections">
               <span>🔖</span> Bộ sưu tập
             </a>
             <div class="dropdown-divider"></div>
@@ -509,6 +509,52 @@
   </div>
 
   <!-- ============================================
+       SIDE PANELS
+       ============================================ -->
+
+  <!-- Backdrop -->
+  <div id="panel-backdrop" class="panel-backdrop" aria-hidden="true"></div>
+
+  <!-- Hồ Sơ Panel -->
+  <aside class="side-panel" id="panel-profile" role="complementary" aria-label="Hồ sơ của tôi">
+    <div class="panel-header">
+      <h2 class="panel-header-title">👤 Hồ sơ của tôi</h2>
+      <button class="panel-close-btn" aria-label="Đóng panel">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="panel-body" id="panel-profile-body"></div>
+  </aside>
+
+  <!-- Ảnh Đã Thích Panel -->
+  <aside class="side-panel" id="panel-likes" role="complementary" aria-label="Ảnh đã thích">
+    <div class="panel-header">
+      <h2 class="panel-header-title">❤️ Ảnh đã thích</h2>
+      <button class="panel-close-btn" aria-label="Đóng panel">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="panel-body" id="panel-likes-body"></div>
+  </aside>
+
+  <!-- Bộ Sưu Tập Panel -->
+  <aside class="side-panel" id="panel-collections" role="complementary" aria-label="Bộ sưu tập">
+    <div class="panel-header">
+      <h2 class="panel-header-title">🔖 Bộ sưu tập</h2>
+      <button class="panel-close-btn" aria-label="Đóng panel">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="panel-body" id="panel-collections-body"></div>
+  </aside>
+
+  <!-- ============================================
        AUTH MODAL
        ============================================ -->
   <div
@@ -690,6 +736,8 @@
   <!-- Scripts -->
   <script src="js/app.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/panels.js"></script>
+
 
 </body>
 </html>
